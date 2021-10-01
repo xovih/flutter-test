@@ -9,7 +9,6 @@ class ProductService {
     String urlProduct = ApiHelper.URL_API_PRODUCT + "&page=${page.toString()}";
 
     var response = await http.get(Uri.parse(urlProduct));
-    print(response.body);
 
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['product'];

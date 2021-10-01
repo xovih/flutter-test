@@ -23,11 +23,7 @@ class AuthService {
 
       final SharedPreferences preferences = await _prefs;
       preferences.setBool("isLogin", true);
-      preferences.setString("id", user.id!);
-      preferences.setString("name", user.name!);
-      preferences.setString("alias", user.username!);
-      preferences.setString("email", user.email!);
-      preferences.setString("avatar", user.photoUrl!);
+      preferences.setString("userId", user.id!);
 
       return user;
     } else {

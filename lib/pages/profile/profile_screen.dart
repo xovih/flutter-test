@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kopkar_mart/pages/login/login_screen.dart';
+import 'package:kopkar_mart/pages/profile/components/body.dart';
+import 'package:kopkar_mart/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
-
   static String routeName = "/profile";
   static String pageLabel = "Profil";
 
@@ -12,33 +14,40 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  String username = "";
-  // String? password;
+  bool isLogged = false;
 
-  handlePref() async {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  isLoggedIn() async {
     final SharedPreferences preferences = await _prefs;
-    setState(() {
-      username = preferences.getString('id')!;
-    });
+
+    if (preferences.containsKey("isLogin")) {
+      this.setState(() {
+        isLogged = true;
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    handlePref();
+    isLoggedIn();
   }
 
   @override
   Widget build(BuildContext context) {
-    // handlePref();
-    return Container(
-      child: Center(
-        child: Text(
-          username,
-          style: TextStyle(color: Colors.black),
+    if (!isLogged) {
+      Navigator.pushNamed(context, LoginScreen.routeName);
+      return Container();
+    } else {
+      AuthProvider userProv = Provider.of<AuthProvider>(context, listen: false);
+      return SafeArea(
+        child: SingleChildScrollView(
+          child: Body(
+            userModel: userProv.user,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
